@@ -27,8 +27,8 @@ void main(){
 	USART_init(myUBRR);
 	sei();
 
-	while(1){
-		USART_transmit(PORTB);
+	while(1){				// Run forever
+		USART_transmit(PORTB);		// Transmit the contents of PORTB, then wait 10ms
 		_delay_ms(10);
 	}
 	
