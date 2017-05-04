@@ -48,6 +48,10 @@ void USART_init(unsigned int ubrr){
 	UCSR0C = (1 << URSEL0) | (1 << USBS0) | (3 << UCSZ00);	//set frame format: 8 data 2 stop bit.	
 }
 
+/* 	Transmit data over USART0
+ * 	data is what to be transfered.
+ *	This code is similar if not identical to the example code in the datasheet.
+ */
 void USART_transmit(unsigned int data){
 
 	while (!(UCSR0A & (1<<UDRE0)))		// Wait until the data is receied
