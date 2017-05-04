@@ -9,6 +9,15 @@
  */
 
 #include<avr/io.h>
-#include<avr/interupt.h>
+#include<avr/interrupt.h>
 
+ISR(INT0_vect){
+	//do something
+	//This is really just here for testing so that I can manually
+	//activate it, in case the serial thing does not receive. The goal
+	//is to have this all done over serial
+}
 
+void main(){
+	sei();
+}
