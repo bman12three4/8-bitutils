@@ -11,6 +11,7 @@
 #include<avr/io.h>
 #include<avr/interrupt.h>
 #include<avr/iom162.h>
+#include<util/delay.h>
 
 #define FOSC 8000000		 //Clock Speed
 #define BAUD 9600   		 //Baud
@@ -19,12 +20,24 @@
 
 
 void main(){
+
+	DDRB = 0x00;
+
 	cli();
 	USART_init(myUBRR);
 	sei();
+
+	while(1){
+		USART_transmit(PORTB);
+		_delay_ms(10);
+	}
 	
 }
 
+/*	Initialize USART0
+ *	ubrr is the UBRR, a function of the clock rate and baud rate, ase defined in the datasheet
+ *	This code almost identical to the example code from the datashheet.
+ */
 void USART_init(unsigned int ubrr){
 
 	UBRR0H = (unsigned char) (ubrr >> 8);	//set UBRRH to the first 8 bits of ubrr
@@ -36,14 +49,15 @@ void USART_init(unsigned int ubrr){
 }
 
 void USART_transmit(unsigned int data){
-	while (!(UCSR0A & (1<<UDRE0)))
+
+	while (!(UCSR0A & (1<<UDRE0)))		// Wait until the data is receied
 		;
 	
-	UCSR0B &= ~(1<<TXB80);
+	UCSR0B &= ~(1<<TXB80);			// Copy the 9th but to TXB80
 	
 	if (data & 0x0100){
 		UCSR0B |= 1<<TXB80;
 	}
 
-	UDR0 = data;
+	UDR0 = data;				// Put data into the buffer, which sends it.
 }
