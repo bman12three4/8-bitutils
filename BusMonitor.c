@@ -13,6 +13,7 @@
 #include<avr/iom162.h>
 #include<util/delay.h>
 
+#define F_CPU 8000000		 //CPU speed
 #define FOSC 8000000		 //Clock Speed
 #define BAUD 9600   		 //Baud
 #define myUBRR FOSC/16/BAUD-1    //Baud Rate Register value
@@ -26,12 +27,10 @@ void main(){
 	cli();
 	USART_init(myUBRR);
 	sei();
-
-	while(1){				// Run forever
-		USART_transmit(PORTB);		// Transmit the contents of PORTB, then wait 10ms
-		_delay_ms(10);
-	}
 	
+	while(1){
+		USART_transmit(7);		
+	}
 }
 
 /*	Initialize USART0
@@ -48,20 +47,21 @@ void USART_init(unsigned int ubrr){
 	UCSR0C = (1 << URSEL0) | (1 << USBS0) | (3 << UCSZ00);	//set frame format: 8 data 2 stop bit.	
 }
 
-/* 	Transmit data over USART0
+/* 	Transmit data over USART0 using 5-8 bit
  * 	data is what to be transfered.
  *	This code is similar if not identical to the example code in the datasheet.
  */
 void USART_transmit(unsigned int data){
 
 	while (!(UCSR0A & (1<<UDRE0)))		// Wait until the data is receied
-		;
-	
-	UCSR0B &= ~(1<<TXB80);			// Copy the 9th but to TXB80
-	
-	if (data & 0x0100){
-		UCSR0B |= 1<<TXB80;
-	}
-
 	UDR0 = data;				// Put data into the buffer, which sends it.
+}
+
+/*	Receive data from USART0 using 5-8 bit
+ *	returns the data received
+ * 	This code is similar if not identical to the example code in the datasheet.
+ */
+void USART_receive(){
+	while (!(UCSR0A & (1<<RXC0)))
+	return UDR0;
 }
