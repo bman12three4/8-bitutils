@@ -8,12 +8,14 @@
  *	   	 constantly does this.
  */
 
+#define F_CPU 8000000
+
 #include<avr/io.h>
 #include<avr/interrupt.h>
 #include<avr/iom162.h>
 #include<util/delay.h>
 
-#define F_CPU 8000000		 //CPU speed
+//#define F_CPU 8000000		 //CPU speed
 #define FOSC 8000000		 //Clock Speed
 #define BAUD 9600   		 //Baud
 #define myUBRR FOSC/16/BAUD-1    //Baud Rate Register value
@@ -23,7 +25,9 @@
 void main(){
 
 	DDRB = 0x00;
-
+	DDRC = 0x0F;
+	PORTB |= 0xAB;
+	
 	cli();
 	USART_init(myUBRR);
 	sei();
