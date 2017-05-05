@@ -1,3 +1,6 @@
+#	This makefile was provided by http://www.atmel.com/webdoc/avrlibcreferencemanual/group__demo__project_1demo_make.html
+
+
 PRG            = BusMonitor
 OBJ            = BusMonitor.o
 #MCU_TARGET     = at90s2313
