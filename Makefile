@@ -1,5 +1,5 @@
 #	This makefile was provided by http://www.atmel.com/webdoc/avrlibcreferencemanual/group__demo__project_1demo_make.html
-
+#	This file is also comically large compared to the files tbat it is building, only beause I use the same one for all projects
 
 PRG            = BusMonitor
 OBJ            = BusMonitor.o
