@@ -21,22 +21,6 @@
 #define myUBRR FOSC/16/BAUD-1    //Baud Rate Register value
 
 
-
-void main(){
-
-	DDRB = 0x00;
-	DDRC = 0x0F;
-	PORTB |= 0xAB;
-	
-	cli();
-	USART_init(myUBRR);
-	sei();
-	
-	while(1){
-		USART_transmit(7);		
-	}
-}
-
 /*	Initialize USART0
  *	ubrr is the UBRR, a function of the clock rate and baud rate, ase defined in the datasheet
  *	This code almost identical to the example code from the datashheet.
@@ -65,7 +49,26 @@ void USART_transmit(unsigned int data){
  *	returns the data received
  * 	This code is similar if not identical to the example code in the datasheet.
  */
-void USART_receive(){
+unsigned int USART_receive( void ){
 	while (!(UCSR0A & (1<<RXC0)))
+		;
+
 	return UDR0;
+}
+
+int main( void ){
+	DDRB = 0x00;
+	DDRC = 0x00;
+
+	cli();
+	USART_init(myUBRR);
+	sei();
+
+	while(1){
+		USART_transmit(PORTB);
+		USART_transmit(PORTC);
+		_delay_ms(100);
+	}
+	
+	return 0;
 }
