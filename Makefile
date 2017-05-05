@@ -13,5 +13,6 @@ clean:
 	cd bin
 	rm -rf *.o $(PRJNAME).elf *.eps *.png *.pdf *.bak
 	rm -rf *.lst *.map
+	cd ..
 	cd build 
 	rm -rf *.hex
