@@ -66,12 +66,14 @@ void USART_flush(){
 }
 
 void MemProgram(unsigned int addr, unsigned int data){
-	// Stuff for the shift registers goes here.
+	PORTC = addr;
+	PORTD = data;
 }
 
 int main( void ){
 	DDRB = 0x00;
-	DDRC = 0x00;
+	DDRC = 0xFF;
+	DDRD = 0xFF;
 
 	cli();
 	USART_init(myUBRR);
