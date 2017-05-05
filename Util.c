@@ -70,8 +70,15 @@ void USART_flush(){
  *	PORTD is the data to be put in.
  */
 void MemProgram(unsigned int addr, unsigned int data){
-	PORTC = addr;	// Set PORTC to addr
-	PORTA = data;	// set PORTA to data
+	PORTC |= (1<<PORTC7);		// Send stop signal
+	PORTC |= (1<<PORTC6);		// Switch memory into programming mode
+	PORTC &  ~(1<<PORTC5);		// Set enter to 0
+	PORTC & (0xF0);			// set the last 4 bits (address) to 0
+	PORTC = addr;			// Set PORTC to addr
+	PORTA = data;			// set PORTA to data
+	PORTC |= (1<<PORTC5);		// set enter to 1	
+	_delay_ms(10);			// delay to ensure memory is programmed
+	PORTC = 0;			// set enter to 0
 }
 
 int main( void ){
@@ -79,19 +86,17 @@ int main( void ){
 	DDRC = 0xFF;	// set PORTC direction to OUT
 	DDRA = 0xFF;	// set PORTD direction to OUT
 
-	cli();
-	USART_init(myUBRR);
-	sei();
+	cli();		// disable interrupts for USART initialization
+	USART_init(myUBRR); //initialize USART
+	sei();		// re-enable interrupts
 
 	while (1){
 		if (USART_receive() == 0x50){ 	// If user sends a "P"
 			USART_transmit(0x52);	// Send pack a "R"
-			USART_flush();
 			unsigned int addr = USART_receive();
-			USART_flush();
 			unsigned int data = USART_receive();
 
-			MemProgram(addr, data);
+			MemProgram(addr, data);	// Send first batch of data as address and second batch of data as data
 		}
 	}	
 
