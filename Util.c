@@ -42,7 +42,7 @@ void USART_init(unsigned int ubrr){
  */
 void USART_transmit(unsigned int data){
 
-	while (!(UCSR0A & (1<<UDRE0)))		// Wait until the data is receied
+	while (!(UCSR0A & (1<<UDRE0)))		// Wait until transmit buffer is empty
 	UDR0 = data;				// Put data into the buffer, which sends it.
 }
 
@@ -50,30 +50,34 @@ void USART_transmit(unsigned int data){
  *	returns the data received
  * 	This code is similar if not identical to the example code in the datasheet.
  */
-unsigned int USART_receive( void ){
-	while (!(UCSR0A & (1<<RXC0)))
+unsigned int USART_receive( void ){	
+	while (!(UCSR0A & (1<<RXC0)))	// Wait until data is received
 		;
 
-	return UDR0;
+	return UDR0;			// Return the data
 }
 
 void USART_flush(){
-	while (!(UCSR0A & (1<<RXC0)))
+	while (!(UCSR0A & (1<<RXC0)))	// Wait until data is received
 		;
 	unsigned int sink;
 	
-	sink = UDR0;
+	sink = UDR0;			// clear the buffer
 }
 
+/*	Program the SRAM of the computer
+ *	PORTC is the address, it is all 8 bits, but the computer only uses 4 right now
+ *	PORTD is the data to be put in.
+ */
 void MemProgram(unsigned int addr, unsigned int data){
-	PORTC = addr;
-	PORTD = data;
+	PORTC = addr;	// Set PORTC to addr
+	PORTA = data;	// set PORTA to data
 }
 
 int main( void ){
-	DDRB = 0x00;
-	DDRC = 0xFF;
-	DDRD = 0xFF;
+	DDRB = 0x00;	// set PORTB direction to IN
+	DDRC = 0xFF;	// set PORTC direction to OUT
+	DDRA = 0xFF;	// set PORTD direction to OUT
 
 	cli();
 	USART_init(myUBRR);
