@@ -8,7 +8,8 @@
  *	   	 constantly does this.
  */
 
-#define F_CPU 8000000
+// This is 1/8 of the oscilator speed because the prescalar is set to 8.
+#define F_CPU 1000000
 
 #include<avr/io.h>
 #include<avr/interrupt.h>
@@ -56,6 +57,14 @@ unsigned int USART_receive( void ){
 	return UDR0;
 }
 
+void USART_flush(){
+	while (!(UCSR0A & (1<<RXC0)))
+		;
+	unsigned int sink;
+	
+	sink = UDR0;
+}
+
 void MemProgram(unsigned int addr, unsigned int data){
 	// Stuff for the shift registers goes here.
 }
@@ -71,7 +80,12 @@ int main( void ){
 	while (1){
 		if (USART_receive() == 0x50){ 	// If user sends a "P"
 			USART_transmit(0x52);	// Send pack a "R"
-			
+			USART_flush();
+			unsigned int addr = USART_receive();
+			USART_flush();
+			unsigned int data = USART_receive();
+
+			MemProgram(addr, data);
 		}
 	}	
 
