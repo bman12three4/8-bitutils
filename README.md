@@ -7,3 +7,7 @@ After sending `0x50`, the program goes into programming mode and returns `0x52`.
 ## Debugger
 Currently the debugger only sends the values of the data bus, but eventually I might be able to change the direction of the programming bus to also get the control pins.
 
+## Commands
+* `0xF0` Enter programming mode.
+* `0xFF` Enter as address to exit programming mode
+* `0x44` Get the data bus
