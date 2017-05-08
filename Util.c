@@ -56,14 +56,6 @@ unsigned int USART_receive( void ){
 	return UDR0;			// Return the data
 }
 
-void USART_flush(){
-	while (!(UCSR0A & (1<<RXC0)))	// Wait until data is received
-		;
-	unsigned int sink;
-	
-	sink = UDR0;			// clear the buffer
-}
-
 /*	Program the SRAM of the computer
  *	PORTC is the address, it is all 8 bits, but the computer only uses 4 right now
  *	PORTD is the data to be put in.
