@@ -16,7 +16,6 @@
 #include<avr/iom162.h>
 #include<util/delay.h>
 
-//#define F_CPU 8000000		 //CPU speed
 #define FOSC 8000000		 //Clock Speed
 #define BAUD 9600   		 //Baud
 #define myUBRR FOSC/16/BAUD-1    //Baud Rate Register value
@@ -70,10 +69,8 @@ void USART_flush(){
  *	PORTD is the data to be put in.
  */
 void MemProgram(unsigned int addr, unsigned int data){
-	PORTC |= (1<<PORTC7);		// Send stop signal
-	PORTC |= (1<<PORTC6);		// Switch memory into programming mode
+	PORTC |= (1<<PORTC7) + (1<<PORTC6);		// Send stop signal and switch memory into programming mode
 	PORTC &  ~(1<<PORTC5);		// Set enter to 0
-	PORTC & (0xF0);			// set the last 4 bits (address) to 0
 	PORTC = addr;			// Set PORTC to addr
 	PORTA = data;			// set PORTA to data
 	PORTC |= (1<<PORTC5);		// set enter to 1	
