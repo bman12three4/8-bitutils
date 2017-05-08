@@ -63,17 +63,18 @@ unsigned int USART_receive( void ){
 void MemProgram(unsigned int addr, unsigned int data){
 	PORTC |= (1<<PORTC7) + (1<<PORTC6);		// Send stop signal and switch memory into programming mode
 	PORTC &=  ~(1<<PORTC5);		// Set enter to 0
-	PORTC = addr;			// Set PORTC to addr
-	PORTA = data;			// set PORTA to data
+	PORTA = addr;			// Set PORTC to addr
+	PORTB = data;			// set PORTA to data
 	PORTC |= (1<<PORTC5);		// set enter to 1	
 	_delay_ms(10);			// delay to ensure memory is programmed
 	PORTC = 0;			// set enter to 0
 }
 
 int main( void ){
-	DDRB = 0x00;	// set PORTB direction to IN
+	DDRB = 0xFF;	// set PORTB direction to IN
 	DDRC = 0xFF;	// set PORTC direction to OUT
 	DDRA = 0xFF;	// set PORTD direction to OUT
+	DDRD = 0x00;
 
 	cli();		// disable interrupts for USART initialization
 	USART_init(myUBRR); //initialize USART
@@ -82,6 +83,9 @@ int main( void ){
 	while (1){
 		if (USART_receive() == 0x50){ 	// If user sends a "P"
 			USART_transmit(0x52);	// Send pack a "R"
+			DDRA = 0xFF;
+			DDRB = 0xFF;
+			DDRC = 0xFF;
 			unsigned int addr = USART_receive();
 			unsigned int data = USART_receive();
 			while (addr != 0xFF){
@@ -90,6 +94,17 @@ int main( void ){
 				addr = USART_receive();
 				data = USART_receive();
 			}
+			DDRA = 0x00;
+			DDRB = 0x00;
+			DDRC = 0x00;
+		}
+		if (USART_receive() == 0x44){
+			DDRA = 0x00;
+			DDRB = 0x00;
+			DDRC = 0x00;
+			USART_transmit(PINA);
+			USART_transmit(PINB);
+			USART_transmit(PINC);
 		}
 	}	
 
