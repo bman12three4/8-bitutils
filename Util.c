@@ -85,6 +85,7 @@ int main( void ){
 			unsigned int addr = USART_receive();
 			unsigned int data = USART_receive();
 			while (addr != 0xFF){
+				USART_transmit(0x52);
 				MemProgram(addr, data);
 				addr = USART_receive();
 				data = USART_receive();
