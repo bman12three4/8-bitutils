@@ -92,8 +92,11 @@ int main( void ){
 			USART_transmit(0x52);	// Send pack a "R"
 			unsigned int addr = USART_receive();
 			unsigned int data = USART_receive();
-
-			MemProgram(addr, data);	// Send first batch of data as address and second batch of data as data
+			while (addr != 0xFF){
+				MemProgram(addr, data);
+				addr = USART_receive();
+				data = USART_receive();
+			}
 		}
 	}	
 
