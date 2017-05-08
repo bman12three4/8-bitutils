@@ -70,7 +70,7 @@ void USART_flush(){
  */
 void MemProgram(unsigned int addr, unsigned int data){
 	PORTC |= (1<<PORTC7) + (1<<PORTC6);		// Send stop signal and switch memory into programming mode
-	PORTC &  ~(1<<PORTC5);		// Set enter to 0
+	PORTC &=  ~(1<<PORTC5);		// Set enter to 0
 	PORTC = addr;			// Set PORTC to addr
 	PORTA = data;			// set PORTA to data
 	PORTC |= (1<<PORTC5);		// set enter to 1	
